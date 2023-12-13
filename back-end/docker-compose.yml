@@ -1,0 +1,26 @@
+# Use root/example as user/password credentials
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: dockback
+      MONGO_INITDB_ROOT_URL: mongodb://root:example@mongo:27017/
+    ports:
+      - 27017:27017
+
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3000:3000
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongodb
+    volumes:
+      - ./src:/app/src
